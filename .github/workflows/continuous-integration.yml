@@ -132,13 +132,23 @@ jobs:
           - name: "windows-2022-x64"
             runs-on: "windows-2022"
             timeout: 30
+            arch: amd64
             config-args: "-G Ninja"
             qt-install-dir: "C:"
+            vcpkg-triplet: x64-windows-release
+
+          - name: "windows-2022-arm64"
+            runs-on: "windows-11-arm"
+            timeout: 30
+            arch: arm64
+            config-args: "-G Ninja"
+            qt-install-dir: "C:"
+            vcpkg-triplet: arm64-windows
 
           - name: "macos-14-arm64"
             runs-on: "macos-14"
             timeout: 10
-            arch: arm64
+            arch: amd64_arm64
             config-args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64\""
             qt-install-dir: "/Users/runner"
 
@@ -253,6 +263,9 @@ jobs:
       - name: Setup VC++ environment
         if: ${{ runner.os == 'Windows' }}
         uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{matrix.target.arch}}
+
 
       - name: Install dependencies
         id: get-deps
@@ -262,6 +275,7 @@ jobs:
           qt-use-naqt: ${{matrix.target.qt-use-naqt}}
           qt-setup-python: ${{matrix.target.qt-setup-python}}
           qt-install-dir: ${{matrix.target.qt-install-dir}}
+          vcpkg-triplet: ${{matrix.target.vcpkg-triplet}}
           like: ${{ matrix.target.like }}
 
       - name: Get version

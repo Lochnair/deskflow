@@ -25,6 +25,10 @@ inputs:
     default: true
     description: "Setup python with Qt action(Windows & macOS)"
 
+  vcpkg-triplet:
+    description: "vcpkg triplet to use (Windows)"
+    required: false
+
 outputs:
   vcpkg-cmake-config:
     description: "windows vcpkg output for cmaket"
@@ -102,7 +106,7 @@ runs:
       with:
         pkgs: gtest openssl
         extra-args: --classic
-        triplet: x64-windows-release
+        triplet: ${{inputs.vcpkg-triplet}}
         token: ${{ github.token }}
         github-binarycache: true
 
