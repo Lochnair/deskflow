@@ -17,6 +17,14 @@ inputs:
     description: "The path to install Qt into (Windows & macOS)"
     required: false
 
+  qt-use-naqt:
+    default: false
+    description: "Use naqt to install Qt (Windows & macOS)"
+
+  qt-setup-python:
+    default: true
+    description: "Setup python with Qt action(Windows & macOS)"
+
 outputs:
   vcpkg-cmake-config:
     description: "windows vcpkg output for cmaket"
@@ -69,12 +77,14 @@ runs:
 
     - name: Install Qt
       if: ${{runner.os != 'Linux' }}
-      uses: jurplel/install-qt-action@v4
+      uses: jdpurcell/install-qt-action@v5
       env:
         AQT_CONFIG: ${{ github.workspace }}/.github/actions/install-dependencies/aqt.ini
       with:
         dir: ${{inputs.qt-install-dir}}
         version: ${{inputs.qt-version}}
+        use-naqt: ${{inputs.qt-use-naqt}}
+        setup-python: ${{inputs.qt-setup-python}}
         cache: true
         cache-key-prefix: ${{matrix.target.os}}-${{inputs.qt-version}}
 
